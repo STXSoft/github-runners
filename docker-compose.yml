@@ -1,0 +1,41 @@
+x-build: &build
+  image: stxs/github_runner:${RUNNER_VERSION}
+  build:
+    context: ./github_runner
+    args:
+      RUNNER_VERSION: ${RUNNER_VERSION}
+
+x-environment: &environment
+    ORG: ${ORG}
+    ACCESS_TOKEN: ${ACCESS_TOKEN}
+    RUNNER_LABELS: host=stxs-htznr-00,no-gpu,docker
+
+x-service: &service
+    <<: *build
+    environment: *environment
+    cpus: 1.5
+    mem_limit: 8g
+    pids_limit: 4096
+    restart: unless-stopped
+
+services:
+  runner_0:
+    <<: *service
+    environment:
+      <<: *environment
+      RUNNER_NAME: runner_0
+  runner_1:
+    <<: *service
+    environment:
+      <<: *environment
+      RUNNER_NAME: runner_1
+  runner_2:
+    <<: *service
+    environment:
+      <<: *environment
+      RUNNER_NAME: runner_2
+  runner_3:
+    <<: *service
+    environment:
+      <<: *environment
+      RUNNER_NAME: runner_3
